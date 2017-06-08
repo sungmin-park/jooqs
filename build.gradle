@@ -1,9 +1,9 @@
 import groovy.sql.Sql
 import groovy.xml.MarkupBuilder
-
-import javax.xml.bind.JAXB
 import org.h2.Driver
 import org.jooq.util.GenerationTool
+
+import javax.xml.bind.JAXB
 
 buildscript {
     ext.kotlin_version = '1.1.2-4'
@@ -21,8 +21,14 @@ buildscript {
 }
 
 apply plugin: 'kotlin'
-sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 apply plugin: 'maven'
