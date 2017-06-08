@@ -21,6 +21,12 @@ buildscript {
 }
 
 apply plugin: 'kotlin'
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+}
+
+apply plugin: 'maven'
+group = 'com.github.sungmin-park'
 
 repositories {
     mavenCentral()
