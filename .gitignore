@@ -2,5 +2,8 @@
 .gradle/
 build/
 
+#jooq
+src/test/java/com/github/parksungmin/jooqs
+
 #Intellij
 .idea/
