@@ -16,8 +16,7 @@ class Pagination<out T>(val first: Int, val total: Int, val last: Int, val page:
                         val navPrev: Int, val hasNavPrev: Boolean, val navNext: Int,
                         val hasNavNext: Boolean, val pages: List<Int>) {
 
-    val itemsIndexed by lazy { items.mapIndexed { i, e -> (total - start - i) to e } }
-
+    val itemsIndexed by lazy { items.mapIndexed { i, e -> Entry(total - start - i, e) } }
 
 
     companion object {
@@ -61,4 +60,6 @@ class Pagination<out T>(val first: Int, val total: Int, val last: Int, val page:
     override fun toString(): String {
         return "Pagination(first=$first, total=$total, last=$last, page=$page, items=$items, start=$start, prev=$prev, hasPrev=$hasPrev, next=$next, hasNext=$hasNext, navPrev=$navPrev, hasNavPrev=$hasNavPrev, navNext=$navNext, hasNavNext=$hasNavNext, pages=$pages)"
     }
+
+    data class Entry<out T>(val index: Int, val item: T)
 }
