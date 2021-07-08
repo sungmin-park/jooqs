@@ -7,3 +7,6 @@ src/test/java/com/github/parksungmin/jooqs
 
 #Intellij
 .idea/
+
+#ignore .env
+.env

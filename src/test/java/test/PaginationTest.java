@@ -34,4 +34,10 @@ public class PaginationTest {
         final Pagination<User> pagination = db(ctx -> Pagination.of(ctx, ctx.selectFrom(USER), 5, 3, 7, mapper));
         System.out.println("pagination = " + pagination);
     }
+
+    @Test
+    public void testMapperDefault() {
+        final Pagination<UserRecord> pagination = db(ctx -> Pagination.of(ctx, ctx.selectFrom(USER), 5, 3, 7));
+        System.out.println("pagination = " + pagination);
+    }
 }

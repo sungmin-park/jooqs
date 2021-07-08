@@ -22,13 +22,27 @@ class Pagination<out T>(val first: Int, val total: Int, val last: Int, val page:
     companion object {
         @JvmStatic
         @JvmOverloads
-        fun <R : Record, E> of(ctx: DSLContext,
-                               query: SelectLimitStep<R>,
-                               forPage: Int = 1,
-                               perPage: Int = 10,
-                               perNav: Int = 10,
-                               mapper: (record: R) -> E,
-                               countQuery: SelectLimitStep<R>? = null
+        fun <R : Record> of(
+            ctx: DSLContext,
+            query: SelectLimitStep<R>,
+            forPage: Int = 1,
+            perPage: Int = 10,
+            perNav: Int = 10,
+            countQuery: SelectLimitStep<R>? = null
+        ): Pagination<R> {
+            return of(ctx, query, forPage, perPage, perNav, { it }, countQuery);
+        }
+
+        @JvmStatic
+        @JvmOverloads
+        fun <R : Record, E> of(
+            ctx: DSLContext,
+            query: SelectLimitStep<R>,
+            forPage: Int = 1,
+            perPage: Int = 10,
+            perNav: Int = 10,
+            mapper: (record: R) -> E,
+            countQuery: SelectLimitStep<R>? = null
         ): Pagination<E> {
             val total = ctx.fetchCount(countQuery ?: query)
 
