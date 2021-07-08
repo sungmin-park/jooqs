@@ -65,7 +65,7 @@ class Pagination<out T>(val first: Int, val total: Int, val last: Int, val page:
             val pages = (navHead..navTail).toList()
 
             val start = (page - 1) * perPage
-            val items = query.limit(start, perPage).map(mapper)
+            val items = query.offset(start).limit(perPage).map(mapper)
 
             return Pagination(1, total, last, page, items, start, prev, hasPrev, next, hasNext, navPrev, hasNavPrev, navNext, hasNavNext, pages)
         }
