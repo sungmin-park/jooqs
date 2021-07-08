@@ -8,6 +8,6 @@ object Jooqs {
     @JvmStatic
     fun exists(ctx: DSLContext, query: Select<*>): Boolean {
         val field = DSL.field(DSL.exists(query))
-        return ctx.select(field).fetchOne(field)
+        return ctx.select(field).fetchOne(field)!!
     }
 }

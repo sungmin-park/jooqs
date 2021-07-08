@@ -1,13 +1,11 @@
 import groovy.sql.Sql
-import groovy.xml.MarkupBuilder
 import org.h2.Driver
-import org.jooq.util.GenerationTool
-
-import javax.xml.bind.JAXB
+import org.jooq.codegen.GenerationTool
+import org.jooq.meta.jaxb.*
 
 buildscript {
     ext.kotlin_version = '1.1.2-4'
-    ext.jooq_version = '3.6.2'
+    ext.jooq_version = '3.14.12'
     ext.h2_version = '1.4.187'
 
     repositories {
@@ -53,32 +51,20 @@ dependencies {
 def sql = new Sql(new Driver().connect('jdbc:h2:mem:test-jooq-tools', null))
 try {
     sql.execute(new File('src/test/resources/db.sql').text)
-    def writer = new StringWriter()
-    //noinspection GroovyUnusedAssignment
-    def xml = new MarkupBuilder(writer)
-            .configuration('xmlns': 'http://www.jooq.org/xsd/jooq-codegen-3.6.0.xsd') {
-        jdbc() {
-            driver('org.h2.Driver')
-            url('jdbc:h2:mem:test-jooq-tools')
-        }
-        generator() {
-            database() {
-                name('org.jooq.util.h2.H2Database')
-                inputSchema('PUBLIC')
-            }
-            generate() {
-                immutablePojos(true)
-            }
-            target() {
-                packageName('com.github.parksungmin.jooqs.database')
-                directory('src/test/java')
-            }
-        }
-    }
     //noinspection GrDeprecatedAPIUsage
-    GenerationTool.main(
-            JAXB.unmarshal(new StringReader(writer.toString()), org.jooq.util.jaxb.Configuration.class)
-    )
+    def configuration = new Configuration()
+    configuration
+            .withJdbc(new Jdbc().withUrl('jdbc:h2:mem:test-jooq-tools'))
+            .withGenerator(
+                    new Generator()
+                            .withDatabase(new Database().withInputSchema('PUBLIC'))
+                            .withGenerate(new Generate().withImmutablePojos(true))
+                            .withTarget(new Target()
+                                    .withPackageName('com.github.parksungmin.jooqs.database')
+                                    .withDirectory('src/test/java')
+                            )
+            )
+    GenerationTool.main(configuration)
 } finally {
     sql.close()
 }
