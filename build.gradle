@@ -38,6 +38,13 @@ artifacts {
 }
 
 group = 'com.github.sungmin-park'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
 
 repositories {
     mavenCentral()
