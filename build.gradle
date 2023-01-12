@@ -4,7 +4,7 @@ import org.jooq.codegen.GenerationTool
 import org.jooq.meta.jaxb.*
 
 buildscript {
-    ext.kotlin_version = '1.1.2-4'
+    ext.kotlin_version = '1.7.21'
     ext.jooq_version = '3.14.12'
     ext.h2_version = '1.4.187'
 
@@ -12,13 +12,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jooq:jooq-codegen:$jooq_version"
         classpath "com.h2database:h2:$h2_version"
     }
 }
 
-apply plugin: 'kotlin'
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version "1.7.21"
+    id "org.jetbrains.kotlin.plugin.serialization" version '1.7.21'
+    id 'maven-publish'
+}
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
@@ -33,7 +36,6 @@ artifacts {
     archives sourcesJar
 }
 
-apply plugin: 'maven'
 group = 'com.github.sungmin-park'
 
 repositories {
@@ -41,16 +43,15 @@ repositories {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile "org.jooq:jooq:$jooq_version"
+    implementation "org.jooq:jooq:$jooq_version"
 
-    testCompile "com.h2database:h2:$h2_version"
-    testCompile 'junit:junit:4.11'
+    testImplementation "com.h2database:h2:$h2_version"
+    testImplementation 'junit:junit:4.11'
 }
 
 def sql = new Sql(new Driver().connect('jdbc:h2:mem:test-jooq-tools', null))
 try {
-    sql.execute(new File('src/test/resources/db.sql').text)
+    sql.execute(file('src/test/resources/db.sql').text)
     //noinspection GrDeprecatedAPIUsage
     def configuration = new Configuration()
     configuration
@@ -64,7 +65,7 @@ try {
                                     .withDirectory('src/test/java')
                             )
             )
-    GenerationTool.main(configuration)
+    GenerationTool.generate(configuration)
 } finally {
     sql.close()
 }

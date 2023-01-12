@@ -1,5 +1,6 @@
 package com.github.parksungmin.jooqs
 
+import com.sun.xml.internal.ws.developer.Serialization
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.jooq.SelectLimitStep
@@ -10,7 +11,8 @@ private fun intCeil(x: Int, y: Int): Int {
     return Math.ceil(x.toDouble() / y).toInt()
 }
 
-class Pagination<out T>(val first: Int, val total: Int, val last: Int, val page: Int, val items: List<T>,
+@Serialization
+data class Pagination<out T>(val first: Int, val total: Int, val last: Int, val page: Int, val items: List<T>,
                         private val start: Int,
                         val prev: Int, val hasPrev: Boolean, val next: Int, val hasNext: Boolean,
                         val navPrev: Int, val hasNavPrev: Boolean, val navNext: Int,
