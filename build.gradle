@@ -5,7 +5,7 @@ import org.jooq.meta.jaxb.*
 
 buildscript {
     ext.kotlin_version = '1.7.21'
-    ext.jooq_version = '3.14.12'
+    ext.jooq_version = '3.17.5'
     ext.h2_version = '1.4.187'
 
     repositories {
