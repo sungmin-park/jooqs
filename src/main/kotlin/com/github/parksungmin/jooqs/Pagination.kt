@@ -1,6 +1,6 @@
 package com.github.parksungmin.jooqs
 
-import com.sun.xml.internal.ws.developer.Serialization
+import kotlinx.serialization.Serializable
 import org.jooq.DSLContext
 import org.jooq.Record
 import org.jooq.SelectLimitStep
@@ -11,12 +11,14 @@ private fun intCeil(x: Int, y: Int): Int {
     return Math.ceil(x.toDouble() / y).toInt()
 }
 
-@Serialization
-data class Pagination<out T>(val first: Int, val total: Int, val last: Int, val page: Int, val items: List<T>,
-                        private val start: Int,
-                        val prev: Int, val hasPrev: Boolean, val next: Int, val hasNext: Boolean,
-                        val navPrev: Int, val hasNavPrev: Boolean, val navNext: Int,
-                        val hasNavNext: Boolean, val pages: List<Int>) {
+@Serializable
+data class Pagination<out T>(
+    val first: Int, val total: Int, val last: Int, val page: Int, val items: List<T>,
+    private val start: Int,
+    val prev: Int, val hasPrev: Boolean, val next: Int, val hasNext: Boolean,
+    val navPrev: Int, val hasNavPrev: Boolean, val navNext: Int,
+    val hasNavNext: Boolean, val pages: List<Int>
+) {
 
     val itemsIndexed by lazy { items.mapIndexed { i, e -> Entry(total - start - i, e) } }
 
@@ -69,7 +71,23 @@ data class Pagination<out T>(val first: Int, val total: Int, val last: Int, val 
             val start = (page - 1) * perPage
             val items = query.offset(start).limit(perPage).map(mapper)
 
-            return Pagination(1, total, last, page, items, start, prev, hasPrev, next, hasNext, navPrev, hasNavPrev, navNext, hasNavNext, pages)
+            return Pagination(
+                1,
+                total,
+                last,
+                page,
+                items,
+                start,
+                prev,
+                hasPrev,
+                next,
+                hasNext,
+                navPrev,
+                hasNavPrev,
+                navNext,
+                hasNavNext,
+                pages
+            )
         }
     }
 
